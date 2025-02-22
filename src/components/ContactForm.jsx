@@ -1,49 +1,36 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import { addContact } from "contactsSlice";
+import { useDispatch } from "react-redux";
 
-const ContactForm = ({ onAddContact }) => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+export const ContactForm = () => {
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
 
-  const handleNameChange = (event) => {
-    setName(event.target.value);
-  };
+  const dispatch = useDispatch();
 
-  const handleNumberChange = (event) => {
-    setNumber(event.target.value);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleAddContact = () => {
     if (name && number) {
-      onAddContact(name, number);
-      setName('');
-      setNumber('');
+      dispatch(addContact({ name, number }));
+      setName("");
+      setNumber("");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <>
       <input
         type="text"
-        name="name"
+        placeholder="Name"
+        onChange={(e) => setName(e.target.value)}
         value={name}
-        onChange={handleNameChange}
-        pattern="^[a-zA-Z]+(([' -][a-zAZ ])?[a-zA-Z]*)*$"
-        title="Name may contain only letters, apostrophe, dash and spaces."
-        required
       />
       <input
         type="tel"
-        name="number"
+        placeholder="Phone Number"
+        onChange={(e) => setNumber(e.target.value)}
         value={number}
-        onChange={handleNumberChange}
-        pattern="^\+?\d{1,4}[-.\s]?\(?\d{1,3}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$"
-        title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-        required
       />
-      <button type="submit">Add Contact</button>
-    </form>
+      <button onClick={handleAddContact}>Add Contact</button>
+    </>
   );
 };
-
-export default ContactForm;
